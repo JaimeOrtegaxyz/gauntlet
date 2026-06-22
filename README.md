@@ -14,6 +14,12 @@ Point it at a working app and it finds the bugs normal review misses: the ones w
 
 ## Install
 
-Managed by the [skills-and-commands](https://github.com/JaimeOrtegaxyz/skills-and-commands) sync script — added to `SKILL_REPOS` in `sync.sh` and symlinked into `~/.claude/skills/gauntlet`. Run `./sync.sh` to install or update.
+Copy the folder into your skills directory:
+
+```sh
+git clone https://github.com/JaimeOrtegaxyz/gauntlet.git ~/.claude/skills/gauntlet
+```
+
+Or into `.claude/skills/gauntlet/` inside a project to scope it there.
 
 Full method — the oracle taxonomy, per-app-type recipes, the risk/fix gate, the calibration probe, and the report format — lives in `SKILL.md` and `references/`.
