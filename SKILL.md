@@ -23,14 +23,10 @@ description: >-
   security-review for security. gauntlet works at whole-app scope on stable code
   and composes those tools rather than duplicating them.
 metadata:
-  version: "0.1.0"
+  version: "0.1.1"
 ---
 
 # Gauntlet
-
-Point this at a working codebase and find the bugs that survive normal review —
-the ones where the code is *self-consistent but wrong*. Then say, plainly, how
-much of the app you could actually vouch for.
 
 ## The core move — read before anything else
 
@@ -59,14 +55,12 @@ oracle sources (full detail in `references/oracles.md`):
   a real browser (compose the `ui-test` skill — see below).
 
 If a target has **none** of these, it is **ABSTAIN** — reported as unverified,
-never asserted as passing. Abstention is a first-class result, not a gap to hide.
+never asserted as passing.
 
 ## How to operate
 
 - **Report-first, always.** The default deliverable is a triaged report. Gauntlet
-  does **not** write fixes on its own. Propose fixes; apply only the narrow safe
-  class and only with explicit per-fix confirmation (see Phase 5 and
-  `references/triage-and-fix.md`). "Fixing" is itself a change that can regress —
+  does **not** write fixes on its own. "Fixing" is itself a change that can regress —
   treat it with the same caution as any destructive action.
 - **Abstention is the headline.** Lead the report with *"X% of the risk-weighted
   surface was oracle-verified; these high-impact areas were ABSTAINED for lack of
@@ -74,14 +68,13 @@ never asserted as passing. Abstention is a first-class result, not a gap to hide
   the valuable logic was never checked is worse than an honest "couldn't verify".
 - **Allocate by risk, never uniformly.** Treating every file/endpoint equally is
   how the last version burned a fortune and risked regressions polishing trivia.
-  Spend deep effort only on the high-impact surface (auth, writes, money, data
-  loss, irreversible actions, security boundaries, external I/O). See
-  `references/triage-and-fix.md`.
+  Spend deep effort only on the high-impact surface; see
+  `references/triage-and-fix.md` for that list.
 - **A finding earns its life with a counterexample.** A FAIL needs a reproducible
-  input→wrong-output (a failing assertion, a transcript, a browser observation)
-  or a verbatim contradiction of an external source — not an argument. No
-  reproduction → downgrade to a low-confidence note. The agent that *finds* an
-  issue may not be the one that *confirms* it.
+  input→wrong-output (see `references/oracles.md`) or a verbatim contradiction of
+  an external source — not an argument. No reproduction → downgrade to a
+  low-confidence note. The agent that *finds* an issue may not be the one that
+  *confirms* it.
 - **Compose, don't rebuild.** Gauntlet orchestrates; it doesn't reimplement other
   skills. Browser execution → `ui-test`. A diff/PR review → `code-review`.
   Confirming one change → `verify`. Security-only → `security-review`. See
@@ -92,8 +85,8 @@ never asserted as passing. Abstention is a first-class result, not a gap to hide
   one — `references/triage-and-fix.md`).
 - **Never pollute the audited repo.** Scratch harnesses, seeded data, and the
   report go in a dated central folder (`~/.claude/gauntlet/<repo>-<date>/`),
-  not the target's tree. Any test files added *to* the repo are proposed, shown,
-  and committed only with confirmation.
+  not the target's tree. For test files added *to* the repo, see
+  `references/reporting.md`.
 
 ## Workflow
 
@@ -120,8 +113,8 @@ Pick recipes by app type from `references/app-types.md`. In rough ROI order:
 1. **Pure-function unit tests** for the few deterministic, high-value functions
    (parsing, money/units math, formatting, token substitution, access checks).
    A true external oracle for near-zero phantom risk — do this first.
-2. **Implicit-oracle wrapper** on every exercised call (no 5xx/crash/hang,
-   parses, schema-valid, idempotency). Cheap, never circular, catches the
+2. **Implicit-oracle wrapper** on every exercised call (see
+   `references/oracles.md` §3). Cheap, never circular, catches the
    high-severity class.
 3. **Metamorphic relations** on list/search/CRUD/transform surfaces (membership,
    subset, partition-completeness, edit-difference). See `references/oracles.md`.
@@ -139,9 +132,7 @@ items only — don't vote on everything.
 ### Phase 4 — Calibration probe (does this pass even catch bugs?)
 Inject a small, tiered set (~10–15) of realistic faults into the high-impact
 paths, run the pass blind, and report the catch rate. Right-sizes trust and
-proves the oracles bite. **State its limit honestly:** it only validates the
-oracle classes you built — abstained areas remain unmeasured. See
-`references/calibration.md`.
+proves the oracles bite. See `references/calibration.md`.
 
 ### Phase 5 — Report & gated fix
 Write the report (`references/reporting.md`): the abstention/coverage headline
@@ -149,20 +140,16 @@ first; confirmed findings ranked by severity×confidence, each with a
 reproduction; a mandatory **"Killed findings (and why)"** section (proof the
 self-refute pass ran); the honest coverage statement (unit- / harness- /
 browser-verified vs abstained). **Fixing is gated and report-only by default.**
-A finding may be *offered* for autonomous fix only if: severity ≥ S2 **and**
-high confidence **and** backed by a non-golden independent oracle. Even then,
-show the diff, get explicit confirmation, apply, and re-run the exact failing
-check **plus** a regression pass; revert if anything worsens. Everything else is
-reported for the human to handle. See `references/triage-and-fix.md`.
+For the full 4-condition fix gate and the apply/re-run/revert loop, see
+`references/triage-and-fix.md`.
 
 ## Stop conditions
 
 - **Find:** stop a surface when consecutive rounds surface nothing new above the
-  severity bar — not when "everything" is covered.
+  severity bar.
 - **Spend:** the high-impact surface gets depth; the long tail gets the implicit
   wrapper or enumerate-only. Log what was downgraded — never silently cap.
-- **Fix:** only the gated safe class, with confirmation. No open-ended "fix every
-  issue."
+- For fix stop conditions, see `references/triage-and-fix.md`.
 
 ## Bundled resources
 

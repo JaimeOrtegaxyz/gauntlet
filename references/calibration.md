@@ -1,7 +1,6 @@
 # Calibration probe — does this pass actually catch bugs?
 
-A QA run that reports "all clear" is worthless if it *couldn't* have caught a real
-bug. The calibration probe measures detection power by injecting known faults and
+The calibration probe measures detection power by injecting known faults and
 checking whether the pass catches them. It converts "we looked at everything"
 into "we caught 9/10 planted S1–S2 faults in the high-impact paths."
 

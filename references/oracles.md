@@ -2,8 +2,7 @@
 
 A test **oracle** is whatever tells you an observed behavior is right or wrong.
 The whole value of gauntlet rests on using *non-circular* oracles. This file is
-the catalog. (Taxonomy after Barr, Harman, McMinn, Shahbaz & Yoo, *The Oracle
-Problem in Software Testing*.)
+the catalog.
 
 ## The anti-circularity rule
 
@@ -41,8 +40,8 @@ doc wins. Let severity/recency decide.
 
 ### Metamorphic relations (MRs) — the workhorse
 You don't need to know the right output; you need a relation between two runs
-that must hold. The reusable set-theoretic patterns (Segura et al., for REST but
-general to any list/search/transform/CRUD surface):
+that must hold. The reusable set-theoretic patterns (general to any
+list/search/transform/CRUD surface):
 
 - **Equivalence** — a change that shouldn't affect membership doesn't: reorder
   inputs, change sort criterion → same set of items returned.
@@ -58,9 +57,8 @@ general to any list/search/transform/CRUD surface):
 - **Difference** — create/update returns the resource with *only* the changed
   fields differing from before.
 
-Pick 5–15 that fit the app; instantiate them against the live interface. They
-find genuine logic bugs because the oracle is a property of the domain, never
-read from the code. Do **not** apply value-equality MRs to nondeterministic
+Pick 5–15 that fit the app; instantiate them against the live interface. Do
+**not** apply value-equality MRs to nondeterministic
 output (LLM text, images, timestamps, random) — use implicit oracles there.
 
 ### Differential / reference oracle
@@ -95,7 +93,8 @@ The only oracle that isn't an opinion. Exercise the system through its real
 interface and assert against types 1–3 above. By app type → `app-types.md`. For
 UIs, compose `ui-test` (→ `composition.md`); for APIs/CLIs, a thin harness or
 direct invocation. Prefer execution over code-trace wherever it's affordable —
-it's what flips phantom-finding rates down.
+a real failing transcript outranks a plausible code-read argument (see the
+counterexample rule).
 
 ## The counterexample-or-downgrade rule
 

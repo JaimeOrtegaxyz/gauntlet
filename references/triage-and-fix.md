@@ -1,13 +1,11 @@
 # Triage & fix — where to spend, what to fix
 
 Two jobs: (1) decide where deep effort goes, (2) decide what (if anything) gets
-fixed autonomously. Both exist to avoid the v1 failure of treating everything
-equally — which wasted budget and risked regressions polishing trivia.
+fixed autonomously.
 
 ## Risk ranking (the high-impact surface)
 
-Rank by **likelihood × impact**, but lead with impact — it's hand-listable in
-minutes and doesn't depend on history.
+Rank by **likelihood × impact**, but lead with impact.
 
 **Impact axis (the high-impact surface — always deep-test this):**
 - Authn/authz, permission checks, tenant isolation
@@ -61,9 +59,7 @@ A finding may be **offered** for an autonomous fix **only if ALL hold**:
 Even then, the loop is: **show the diff → get explicit confirmation → apply →
 re-run the exact failing check → run a regression pass (the rest of the harness +
 typecheck/build/tests) → revert if anything worsens.** Never batch-apply silently.
-A "fix" is a change like any other — the v1 lesson is that an unverified fix can
-introduce a worse bug than the one it closes (and can be built on a phantom
-finding). When in doubt, report, don't touch.
+When in doubt, report, don't touch.
 
 Low-confidence and low-severity findings are **always** report-only, regardless
 of the above. So are anything from golden diffs and any visual-judgment UI

@@ -39,7 +39,7 @@ project's own test runner and fixtures when they exist.
 
 ## Library / package (public API)
 - **Exercise:** import it and call the public surface directly (its own test
-  runner). Focus on documented contracts, edge inputs, and error paths.
+  runner).
 - **Derived:** this is where clean-room **differential** oracles and
   **property-based** tests (fast-check / Hypothesis / proptest) shine — generate
   random inputs and assert invariants (round-trips, monotonicity, bounds,
